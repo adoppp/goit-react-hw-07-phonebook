@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchContacts, addContact } from '../operations/contactsThunk'
 
-const CONTACTS_INITIAL_STATE = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+const CONTACTS_INITIAL_STATE = {
+  items: [],
+  isLoading: false,
+  error: null,
+};
 
 const contactsSlice = createSlice({
     name: "contacts",
@@ -13,17 +13,46 @@ const contactsSlice = createSlice({
     initialState: CONTACTS_INITIAL_STATE,
 
     reducers: {
-      addContact(state, action) {
-        state.push(action.payload)
-      },
+      // addContact(state, action) {
+      //   state.items.push(action.payload)
+      // },
       deleteContact(state, action) {
         // state.filter(contact => contact.id !== action.payload)
-        const contactIndex = state.findIndex(contact => contact.id === action.payload);
-        state.splice(contactIndex, 1)
+        const contactIndex = state.items.findIndex(contact => contact.id === action.payload);
+        state.items.splice(contactIndex, 1)
       },
-    }
+    },
+    extraReducers: (builder) => {
+      builder
+      .addCase(fetchContacts.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = action.payload;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      .addCase(addContact.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addContact.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.items = [...state.items, action.payload];
+      })
+      .addCase(addContact.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+    },
 })
 
-export const { addContact, deleteContact } = contactsSlice.actions;
+// export const { addContact, deleteContact } = contactsSlice.actions;
 
-export const contactsReduser = contactsSlice.reducer;
+export const contactsReducer = contactsSlice.reducer;

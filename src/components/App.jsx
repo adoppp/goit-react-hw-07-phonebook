@@ -4,14 +4,22 @@ import { ContactForm } from './Form/form';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import { useDispatch, useSelector } from 'react-redux';
-import { contactsSelector, filterSelector } from 'redux/selectors/selectors';
-import { addContact, deleteContact } from 'redux/redusers/contactsSlice';
+import { contactsSelector, errorSelector, filterSelector, isLoadingSelector } from 'redux/selectors/selectors';
 import { makeFilter } from 'redux/redusers/filterSlice';
+import { fetchContacts, addContact } from 'redux/operations/contactsThunk';
+import { Loader } from './Loader/Loader';
+import { Error } from './Error/Error';
 
 export const App = () => {
   const contacts = useSelector(contactsSelector);
   const filter = useSelector(filterSelector);
+  const isLoading = useSelector(isLoadingSelector);
+  const error = useSelector(errorSelector);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts())
+  }, []);
 
   const handleAddContact = contact => {
     const { name } = contact;
@@ -25,25 +33,13 @@ export const App = () => {
     dispatch(addContact(contact))
   };
 
-  useEffect(() => {
-    if (contacts.length > 0) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-  }, [contacts]);
-  
-  useEffect(() => {
-    const localStorageContacts = JSON.parse(window.localStorage.getItem('contacts'));
-    if (localStorageContacts) {
-      // setContacts(localStorageContacts)
-    }
-  }, []);
-
-  const handleDeleteContact = id => {
-    dispatch(deleteContact(id))
-  };
+  // const handleDeleteContact = id => {
+  //   console.log(id)
+  // };
 
 
   const handleFilter = e => {
+    if (!e) return;
     dispatch(makeFilter(e))
   };
 
@@ -53,11 +49,15 @@ export const App = () => {
       <ContactForm onAddContact={handleAddContact} />
       <h2>Contacts</h2>
       <Filter onFilter={handleFilter} />
+      {isLoading ? 
+      <Loader /> : 
       <ContactList
         contacts={contacts}
-        onDeleteContact={handleDeleteContact}
+        //onDeleteContact={handleDeleteContact}
         filter={filter}
       />
+      }
+      {error && (<Error errorText={`Something went wrong... ${error}. Please try again.`} />)}
     </div>
   );
 }
