@@ -11,6 +11,7 @@ import { ContactForm } from './Form/form';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import css from './App.module.css';
+import { Total } from './Total/Total';
 
 export const App = () => {
   const contacts = useSelector(contactsSelector);
@@ -57,6 +58,7 @@ export const App = () => {
       <h1 className={css.title}>Phonebook</h1>
       <ContactForm onAddContact={handleAddContact} />
       <h2 className={css.titleh2}>Contacts</h2>
+      <Total contacts={contacts}/>
       <Filter onFilter={handleFilter} />
       {isLoading ? 
       <Loader /> : 
