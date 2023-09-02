@@ -1,7 +1,9 @@
+import Notiflix from "notiflix"
+
 export const Error = ({errorText}) => {
     return (
         <div>
-            <span>{errorText}</span>
+            {Notiflix.Notify.failure(errorText)}
         </div>
     )
 }

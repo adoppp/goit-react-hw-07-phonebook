@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { ContactItem } from './ContactItem/ContatcItem';
+import css from './ContactList.module.css';
 
 export const ContactList = ({ contacts, onDeleteContact, filter }) => {
 
@@ -14,9 +15,9 @@ export const ContactList = ({ contacts, onDeleteContact, filter }) => {
   />);
   
   return (
-    <div>
+    <ul className={css.list}>
       {contactElem}
-    </div>
+    </ul>
   );
 };
 

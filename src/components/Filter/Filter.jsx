@@ -1,22 +1,17 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import css from './Filter.module.css';
 
 export const Filter = ({ onFilter }) => {
-  const [filter, setFilter] = useState("");
   
   const handleFilter = e => {
     const inputValue = e.target.value
-    if (inputValue !== '') {
-    setFilter(inputValue)
-    }
+    onFilter(inputValue)
   }
 
-  onFilter(filter)
-
     return (
-      <label>
+      <label className={css.label}>
         Find contacts by name
-        <input type="text" onChange={handleFilter} value={filter} />
+        <input type="text" onChange={handleFilter} className={css.input} placeholder='Name' />
       </label>
     );
 }
