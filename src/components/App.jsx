@@ -22,7 +22,7 @@ export const App = () => {
 
   useEffect(() => {
     dispatch(fetchContacts())
-  }, []);
+  }, [dispatch]);
 
   const handleAddContact = contact => {
     const { name, number } = contact;
